@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { phonebookSelectors, filterContact } from '../../redux/phonebook';
 import PropTypes from 'prop-types';
-import styles from './Filter.module.css';
+import styles from './ContactsFilter.module.css';
 
 const Filter = ({ value, onChange }) => (
   <label>

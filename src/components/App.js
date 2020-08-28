@@ -1,24 +1,38 @@
-import React from 'react';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import React, { Component } from 'react';
+import { Switch, Route } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-import ContactForm from './ContactForm';
-import ContactList from './ContactList';
-import Filter from './Filter';
+import Container from './Container';
+import AppBar from './AppBar';
+import HomeView from '../views/HomeView';
+import RegisterView from '../views/RegisterView';
+import LoginView from '../views/LoginView';
+import ContactsView from '../views/ContactsView';
+import { authOperations } from '../redux/auth';
 
-import styles from './App.module.css';
+class App extends Component {
+  componentDidMount() {
+    this.props.onGetCurrentUser();
+  }
 
-const App = () => {
-  return (
-    <div>
-      <h1 className={styles.header}>Phonebook</h1>
-      <ContactForm />
-      <ToastContainer />
-      <h2 className={styles.header}>Contacts</h2>
-      <Filter />
-      <ContactList />
-    </div>
-  );
+  render() {
+    return (
+      <Container>
+        <AppBar />
+
+        <Switch>
+          <Route exact path="/" component={HomeView} />
+          <Route path="/register" component={RegisterView} />
+          <Route path="/login" component={LoginView} />
+          <Route path="/contacts" component={ContactsView} />
+        </Switch>
+      </Container>
+    );
+  }
+}
+
+const mapDispatchToProps = {
+  onGetCurrentUser: authOperations.getCurrentUser,
 };
 
-export default App;
+export default connect(null, mapDispatchToProps)(App);
