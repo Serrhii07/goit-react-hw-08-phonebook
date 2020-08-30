@@ -1,14 +1,25 @@
-import React, { Component } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import React, { Component, Suspense, lazy } from 'react';
+import { Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Container from './Container';
 import AppBar from './AppBar';
-import HomeView from '../views/HomeView';
-import RegisterView from '../views/RegisterView';
-import LoginView from '../views/LoginView';
-import ContactsView from '../views/ContactsView';
+import PublicRoute from './PublicRoute';
+import PrivateRoute from './PrivateRoute';
 import { authOperations } from '../redux/auth';
+
+const HomeView = lazy(() =>
+  import('../views/HomeView' /* webpackChunkName: "home-page" */),
+);
+const RegisterView = lazy(() =>
+  import('../views/RegisterView' /* webpackChunkName: "register-page" */),
+);
+const LoginView = lazy(() =>
+  import('../views/LoginView' /* webpackChunkName: "login-page" */),
+);
+const ContactsView = lazy(() =>
+  import('../views/ContactsView' /* webpackChunkName: "contacts-page" */),
+);
 
 class App extends Component {
   componentDidMount() {
@@ -20,12 +31,28 @@ class App extends Component {
       <Container>
         <AppBar />
 
-        <Switch>
-          <Route exact path="/" component={HomeView} />
-          <Route path="/register" component={RegisterView} />
-          <Route path="/login" component={LoginView} />
-          <Route path="/contacts" component={ContactsView} />
-        </Switch>
+        <Suspense fallback={<p>Loading...</p>}>
+          <Switch>
+            <PublicRoute exact path="/" component={HomeView} />
+            <PublicRoute
+              path="/register"
+              redirectTo="/contacts"
+              restricted
+              component={RegisterView}
+            />
+            <PublicRoute
+              path="/login"
+              redirectTo="/contacts"
+              restricted
+              component={LoginView}
+            />
+            <PrivateRoute
+              path="/contacts"
+              redirectTo="/login"
+              component={ContactsView}
+            />
+          </Switch>
+        </Suspense>
       </Container>
     );
   }

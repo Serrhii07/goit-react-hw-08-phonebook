@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Button from '@material-ui/core/Button';
+import { TextField } from '@material-ui/core';
 import { authOperations } from '../redux/auth';
 import styles from './LoginView.module.css';
 
@@ -16,9 +20,27 @@ class LoginView extends Component {
   handleSubmit = e => {
     e.preventDefault();
 
-    this.props.onLogin(this.state);
+    const validLoginData = this.getValidLoginData();
+    if (validLoginData) {
+      this.props.onLogin(this.state);
+    }
 
-    this.setState({ name: '', email: '', password: '' });
+    this.reset();
+  };
+
+  getValidLoginData = () => {
+    const { email, password } = this.state;
+
+    if (!email || !password) {
+      toast.info(`Please, fill the form.`);
+      return;
+    }
+
+    return { email, password };
+  };
+
+  reset = () => {
+    this.setState({ email: '', password: '' });
   };
 
   render() {
@@ -26,35 +48,44 @@ class LoginView extends Component {
 
     return (
       <div>
-        <h1>Login page</h1>
+        <ToastContainer />
+        <h1 className={styles.header}>Login page</h1>
 
         <form className={styles.form} onSubmit={this.handleSubmit}>
-          <label className={styles.label}>
-            Email
-            <input
-              type="email"
-              name="email"
-              value={email}
-              onChange={this.handleChange}
-            />
-          </label>
+          <TextField
+            label="Email"
+            name="email"
+            type="email"
+            value={email}
+            variant="outlined"
+            color="primary"
+            onChange={this.handleChange}
+          />
 
-          <label className={styles.label}>
-            Password
-            <input
-              type="password"
-              name="password"
-              value={password}
-              onChange={this.handleChange}
-            />
-          </label>
+          <TextField
+            label="Password"
+            name="password"
+            type="password"
+            value={password}
+            variant="outlined"
+            color="primary"
+            onChange={this.handleChange}
+          />
 
-          <button type="submit">Enter</button>
+          <Button
+            color="primary"
+            variant="contained"
+            size="small"
+            type="submit"
+          >
+            Enter
+          </Button>
         </form>
       </div>
     );
   }
 }
+
 const mapDispatchToProps = {
   onLogin: authOperations.logIn,
 };

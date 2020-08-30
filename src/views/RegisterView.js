@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Button from '@material-ui/core/Button';
+import { TextField } from '@material-ui/core';
 import { authOperations } from '../redux/auth';
 import styles from './RegisterView.module.css';
 
@@ -17,8 +21,26 @@ class RegisterView extends Component {
   handleSubmit = e => {
     e.preventDefault();
 
-    this.props.onRegister(this.state);
+    const validRegistrationData = this.getValidRegistrationData();
+    if (validRegistrationData) {
+      this.props.onRegister(this.state);
+    }
 
+    this.reset();
+  };
+
+  getValidRegistrationData = () => {
+    const { name, email, password } = this.state;
+
+    if (!name || !email || !password) {
+      toast.info(`Please, fill the form.`);
+      return;
+    }
+
+    return { name, email, password };
+  };
+
+  reset = () => {
     this.setState({ name: '', email: '', password: '' });
   };
 
@@ -27,40 +49,48 @@ class RegisterView extends Component {
 
     return (
       <div>
-        <h1>Registration page</h1>
+        <ToastContainer />
+        <h1 className={styles.header}>Registration page</h1>
 
         <form className={styles.form} onSubmit={this.handleSubmit}>
-          <label className={styles.label}>
-            Name
-            <input
-              type="text"
-              name="name"
-              value={name}
-              onChange={this.handleChange}
-            />
-          </label>
+          <TextField
+            label="Name"
+            name="name"
+            type="text"
+            value={name}
+            variant="outlined"
+            color="primary"
+            onChange={this.handleChange}
+          />
 
-          <label className={styles.label}>
-            Email
-            <input
-              type="email"
-              name="email"
-              value={email}
-              onChange={this.handleChange}
-            />
-          </label>
+          <TextField
+            label="Email"
+            name="email"
+            type="email"
+            value={email}
+            variant="outlined"
+            color="primary"
+            onChange={this.handleChange}
+          />
 
-          <label className={styles.label}>
-            Password
-            <input
-              type="password"
-              name="password"
-              value={password}
-              onChange={this.handleChange}
-            />
-          </label>
+          <TextField
+            label="Password"
+            name="password"
+            type="password"
+            value={password}
+            variant="outlined"
+            color="primary"
+            onChange={this.handleChange}
+          />
 
-          <button type="submit">Register</button>
+          <Button
+            color="primary"
+            variant="contained"
+            size="small"
+            type="submit"
+          >
+            Register
+          </Button>
         </form>
       </div>
     );

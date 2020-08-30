@@ -1,9 +1,13 @@
 .form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  margin: 0 auto;
+  height: 224px;
   width: 320px;
 }
 
-.label {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 15px;
+.header {
+  margin-bottom: 30px;
 }

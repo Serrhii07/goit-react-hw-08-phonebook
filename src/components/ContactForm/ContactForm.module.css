@@ -1,23 +1,12 @@
 .form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   width: 400px;
+  height: 186px;
   margin-bottom: 30px;
   padding: 10px;
-  border: 2px solid #000;
-}
-
-.form_text {
-  margin-bottom: 8px;
-}
-
-.form_input {
-  margin-bottom: 24px;
-}
-
-.form_button {
-  display: block;
-  font-size: 14px;
-  background-color: #fff;
-  border: 1px solid #b1aeae;
+  border: 1px solid #000;
   border-radius: 4px;
-  cursor: pointer;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 }

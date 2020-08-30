@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
+import Button from '@material-ui/core/Button';
+import { TextField } from '@material-ui/core';
 import { phonebookOperations, phonebookSelectors } from '../../redux/phonebook';
 import PropTypes from 'prop-types';
 import styles from './ContactForm.module.css';
@@ -19,33 +21,47 @@ class ContactForm extends Component {
   handleSubmit = e => {
     e.preventDefault();
 
-    const validName = this.getValidName();
-    if (validName) {
+    const validContact = this.getValidContact();
+    if (validContact) {
       this.props.onSubmit(this.state);
     }
 
     this.reset();
   };
 
-  getValidName = () => {
+  getValidContact = () => {
     const { contacts } = this.props;
-    const { name } = this.state;
-    const normalizedName = name.toLowerCase();
-    const duplicate = contacts.find(
+    const { name, number } = this.state;
+    const normalizedName = name.toLowerCase().trim();
+    const duplicateName = contacts.find(
       contact => contact.name.toLowerCase() === normalizedName,
     );
+    const normalizedNumber = Number(number.trim());
+    const duplicateNumber = contacts.find(
+      contact => Number(contact.number) === normalizedNumber,
+    );
 
-    if (duplicate) {
+    if (duplicateName) {
       toast.info(`${name} is already in contacts.`);
       return;
     }
 
-    if (!name) {
+    if (duplicateNumber) {
+      toast.info(`${number} is already in contacts.`);
+      return;
+    }
+
+    if (!name || !number) {
       toast.info('Please, fill the form');
       return;
     }
 
-    return name;
+    if (!normalizedNumber) {
+      toast.info(`${number} is not a number.`);
+      return;
+    }
+
+    return { name, number };
   };
 
   reset = () => {
@@ -55,30 +71,28 @@ class ContactForm extends Component {
   render() {
     return (
       <form className={styles.form} onSubmit={this.handleSubmit}>
-        <label>
-          <p className={styles.form_text}>Name</p>
-          <input
-            className={styles.form_input}
-            type="text"
-            name="name"
-            value={this.state.name}
-            onChange={this.handleChange}
-          />
-        </label>
-        <label>
-          <p className={styles.form_text}>Number</p>
-          <input
-            className={styles.form_input}
-            type="tel"
-            name="number"
-            value={this.state.number}
-            onChange={this.handleChange}
-          />
-        </label>
+        <TextField
+          label="Name"
+          name="name"
+          type="text"
+          value={this.state.name}
+          variant="outlined"
+          color="primary"
+          onChange={this.handleChange}
+        />
+        <TextField
+          label="Number"
+          name="number"
+          type="tel"
+          value={this.state.number}
+          variant="outlined"
+          color="primary"
+          onChange={this.handleChange}
+        />
 
-        <button className={styles.form_button} type="submit">
+        <Button color="primary" variant="contained" size="small" type="submit">
           Add contact
-        </button>
+        </Button>
       </form>
     );
   }

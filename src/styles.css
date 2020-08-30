@@ -1,6 +1,7 @@
 body {
   padding: 30px;
   font-size: 18px;
+  background: linear-gradient(to right, #ece9e6, #ffffff);
 }
 
 p,

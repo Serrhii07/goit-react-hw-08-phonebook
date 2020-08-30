@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import ContactListItem from './ContactListItem';
 import { phonebookOperations, phonebookSelectors } from '../../redux/phonebook';
 import PropTypes from 'prop-types';
+import styles from './ContactList.module.css';
 
 class ContactList extends Component {
   componentDidMount() {
@@ -17,8 +18,8 @@ class ContactList extends Component {
       <>
         {this.props.isLoadingContacts && <h2>Loading...</h2>}
         {this.props.isError && <h2>Oops! Something went wrong :(</h2>}
-        {contacts.length > 0 && (
-          <ul>
+        {contacts.length > 0 ? (
+          <ul className={styles.contactList}>
             {contacts.map(({ id, name, number }) => (
               <ContactListItem
                 key={id}
@@ -28,6 +29,8 @@ class ContactList extends Component {
               />
             ))}
           </ul>
+        ) : (
+          <p>No contacts</p>
         )}
       </>
     );
